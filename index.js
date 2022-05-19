@@ -8,8 +8,17 @@ const rcon = new RCON();
 const port = 3000;
 const homedir = require("os").homedir();
 
+app.use(express.static("client"));
+app.use(express.static("node_modules/jquery/dist/"));
+
 app.get("/", (req,res) => {
-	res.send("hello world");
+	res.sendFile(`${__dirname}/client/index.html`);
+});
+
+app.post("/command", (req,res) => {
+	let command = req.body;
+
+	console.log(command);
 });
 
 app.listen(port, () => {
@@ -19,6 +28,7 @@ app.listen(port, () => {
 // noinspection SpellCheckingInspection
 rcon.connect("localhost", 25575, "superawesomepassword").then(() => {
 	console.log("authenticated");
+	runCommand("list");
 });
 
 function runCommand(command) {
